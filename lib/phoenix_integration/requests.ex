@@ -412,7 +412,10 @@ defmodule PhoenixIntegration.Requests do
 
   defp preserve_host(conn) do
     new_conn = Phoenix.ConnTest.recycle(conn)
-    %{new_conn | host: conn.host, req_headers: conn.req_headers}
+    %{new_conn |
+      host: conn.host,
+      req_headers: Enum.concat(conn.req_headers, new_conn.req_headers)
+    }
   end
 
   #----------------------------------------------------------------------------

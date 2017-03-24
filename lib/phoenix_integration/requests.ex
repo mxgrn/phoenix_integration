@@ -72,6 +72,7 @@ defmodule PhoenixIntegration.Requests do
         # we want to use the returned conn for the redirects as it
         # contains state that might be needed
         [location] = Plug.Conn.get_resp_header(conn, "location")
+        conn = preserve_host(conn)
         get(conn, location)
         |> follow_redirect(max_redirects - 1)
       _ -> conn
@@ -394,6 +395,7 @@ defmodule PhoenixIntegration.Requests do
 
   #----------------------------------------------------------------------------
   defp request_path(conn, path, method, data \\ %{} ) do
+    conn = preserve_host(conn)
     case to_string(method) do
       "get" ->
         get( conn, path, data )
@@ -407,6 +409,13 @@ defmodule PhoenixIntegration.Requests do
         delete( conn, path, data )
     end
   end
+
+  defp preserve_host(conn) do
+    host = conn.host
+    conn = Phoenix.ConnTest.recycle(conn)
+    %{conn | host: host}
+  end
+
   #----------------------------------------------------------------------------
   # don't really care if there are multiple copies of the same link,
   # jsut that it is actually on the page

@@ -47,7 +47,7 @@ defmodule PhoenixIntegration.Requests do
             html: "New User" )
       end
   """
-  
+
   @endpoint Application.get_env(:phoenix_integration, :endpoint)
 
   #----------------------------------------------------------------------------
@@ -160,7 +160,7 @@ defmodule PhoenixIntegration.Requests do
 
   ### Links that don't use the :get method
 
-  When Phoneix.Html renders a link, it usually generates an `<a>` tag. However, if you 
+  When Phoneix.Html renders a link, it usually generates an `<a>` tag. However, if you
   specify a method other than :get, then Phoenix generates html looks like a link, but
   is really a form using the method. This is why you must specify the method used in `opts`
   if you used anything other than the standard :get in your link.
@@ -213,7 +213,7 @@ defmodule PhoenixIntegration.Requests do
 
   ### Links that don't use the :get method
 
-  When Phoneix.Html renders a link, it usually generates an `<a>` tag. However, if you 
+  When Phoneix.Html renders a link, it usually generates an `<a>` tag. However, if you
   specify a method other than :get, then Phoenix generates html looks like a link, but
   is really a form using the method. This is why you must specify the method used in `opts`
   if you used anything other than the standard :get in your link.
@@ -401,9 +401,9 @@ defmodule PhoenixIntegration.Requests do
         get( conn, path, data )
       "post" ->
         post( conn, path, data )
-      "put" -> 
+      "put" ->
         put( conn, path, data )
-      "patch" -> 
+      "patch" ->
         patch( conn, path, data )
       "delete" ->
         delete( conn, path, data )
@@ -411,9 +411,8 @@ defmodule PhoenixIntegration.Requests do
   end
 
   defp preserve_host(conn) do
-    host = conn.host
-    conn = Phoenix.ConnTest.recycle(conn)
-    %{conn | host: host}
+    new_conn = Phoenix.ConnTest.recycle(conn)
+    %{new_conn | host: conn.host, req_headers: conn.req_headers}
   end
 
   #----------------------------------------------------------------------------
@@ -449,9 +448,9 @@ defmodule PhoenixIntegration.Requests do
           cond do
             # see if the identifier is in the links's text
             Floki.text(link) =~ identifier -> link
-            Floki.FlatText.get(kids) =~ identifier -> link            
+            Floki.FlatText.get(kids) =~ identifier -> link
             # all other cases fail
-            true -> nil 
+            true -> nil
           end
       end
     end)
